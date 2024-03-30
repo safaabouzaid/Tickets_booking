@@ -30,7 +30,7 @@ class Customer(models.Model):
         passport_number=models.CharField(max_length=100,blank=True,null=True)
         gender=models.SmallIntegerField(choices=GUNDER_CHOICES,null=True)
         def __str__(self):
-         return self(self.user)
+         return str(self.user)
 
 class UserProfile(models.Model):
     GUNDER_CHOICES=(
