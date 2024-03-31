@@ -1,5 +1,6 @@
 from django.db import models
 from operator import mod
+from account.models import User
 from datetime import datetime, timedelta 
 from account.models import User
 from flights.models import Flight,FlightSeatClass
@@ -24,23 +25,27 @@ class Booking(models.Model):
     trip_type = models.CharField(max_length=2, choices=TRIP_TYPE_CHOICES, default='OW')
     status = models.CharField(max_length=3, choices=STATUS_CHOICES, default='CMP')
     has_companions = models.BooleanField(default=False)
-
+    #passengers = models.ForeignKey(Passenger, related_name='bookings')
     def __str__(self):
         return f'Booking {self.booking_id} - User: {self.user.username} - Status: {self.get_status_display()}'
 
 
 
-class Companion(models.Model):
+class Passenger(models.Model):
     GENDER_CHOICES = (
         ('Mr', 'Mr'),
         ('Ms', 'Ms'),
         ('Mrs', 'Mrs'),
-)
-
-    
-    booking = models.ForeignKey(Booking, related_name='companions', on_delete=models.CASCADE)
+    )    
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
+    booking = models.ForeignKey(Booking, related_name='passengers', on_delete=models.CASCADE)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     date_of_birth = models.DateField()
     gender = models.CharField(max_length=3, choices=GENDER_CHOICES)
     passport_number = models.CharField(max_length=20)
+    phone_number=models.CharField(max_length=100,null=True,blank=True)
+    def str(self):
+             return f" {self.first_name} {self.last_name}"
+
+
