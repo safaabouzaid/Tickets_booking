@@ -1,4 +1,4 @@
-from .models import UserProfile,Customer,User
+from .models import UserProfile,User
 from django import forms
 class UserEditForm(forms.ModelForm):
  class Meta:

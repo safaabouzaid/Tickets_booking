@@ -1,7 +1,7 @@
 from django.db import models
 from operator import mod
 from datetime import datetime, timedelta 
-from account.models import User,Customer
+from account.models import User
 from flights.models import Flight,FlightSeatClass
 # Create your models here.
 

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Flight,Review
+from .models import Flight,Review,FlightSeatClass
 
 class FlightSerializer(serializers.ModelSerializer) :
     
@@ -7,8 +7,6 @@ class FlightSerializer(serializers.ModelSerializer) :
     class Meta:
         model=Flight
         fields="all"
-
-    
 
     def get_reviews(self,obj):
         reviews=obj.reviews.all()
@@ -29,18 +27,12 @@ class FlightSerializer(serializers.ModelSerializer) :
 
 
 
+class SeatSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FlightSeatClass
+        fields = ['id', 'seat_number', 'is_reserved']
 
 
 
-'''
-class FlightSerializerRating(serializers.ModelSerializer):
 
-     class Meta:
-         model=Flight
-         fields=('flight_id','notes')       
-class RatingSerializer(serializers.ModelSerializer):
 
-    class Meta :
-        model=Rating
-        fields=('id','flight','user','star')       
-'''

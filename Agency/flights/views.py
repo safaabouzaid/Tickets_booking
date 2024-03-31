@@ -2,15 +2,16 @@ from django.shortcuts import render
 from django.shortcuts import render,get_object_or_404 
 from rest_framework.decorators import api_view ,permission_classes
 from rest_framework.response import Response
-from .models import Flight,Airline
+from .models import Flight,Airline,FlightSeatClass
 from rest_framework.pagination import PageNumberPagination
 from django.db.models import Avg
-from .serializer import FlightSerializer
+from .serializer import FlightSerializer,SeatSerializer
 from .filters import FlightsFilter
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.tokens import AccessToken
 from .filters import FlightsFilter
 from rest_framework import generics
+from rest_framework import viewsets
 
 # Create your views here.
 @api_view(['GET'])
@@ -120,3 +121,10 @@ class FlightListView(generics.ListAPIView):
     queryset = Flight.objects.all()
     serializer_class = FlightSerializer
     filterset_class = FlightsFilter
+
+
+
+
+class SeatViewSet(viewsets.ModelViewSet):
+    queryset = FlightSeatClass.objects.all()
+    serializer_class = SeatSerializer

@@ -17,7 +17,7 @@ class User(AbstractUser) :
     #USERNAME-FIELD=='email',
     def __str__(self):
         return self.username
-
+'''
 class Customer(models.Model):
         GUNDER_CHOICES=(
         (1,'male'),
@@ -31,7 +31,7 @@ class Customer(models.Model):
         gender=models.SmallIntegerField(choices=GUNDER_CHOICES,null=True)
         def __str__(self):
          return str(self.user)
-
+'''
 class UserProfile(models.Model):
     GUNDER_CHOICES=(
         (1,'male'),
