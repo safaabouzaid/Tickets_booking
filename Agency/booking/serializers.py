@@ -5,6 +5,7 @@ class FlightBookingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Booking
         fields = '__all__'
+        #sedra
 
     def validate(self, data):
      print("Validating data...")
