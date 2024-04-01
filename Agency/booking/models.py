@@ -22,6 +22,8 @@ class Booking(models.Model):
     return_flight = models.ForeignKey(Flight, related_name='return_bookings', on_delete=models.SET_NULL, null=True, blank=True)
     booking_date = models.DateTimeField(auto_now_add=True)
     seat_class = models.ForeignKey(FlightSeatClass, on_delete=models.CASCADE)
+    seat_number = models.CharField(max_length=5, blank=True, null=True)  # تحديد رقم المقعد
+
     trip_type = models.CharField(max_length=2, choices=TRIP_TYPE_CHOICES, default='OW')
     status = models.CharField(max_length=3, choices=STATUS_CHOICES, default='CMP')
     has_companions = models.BooleanField(default=False)

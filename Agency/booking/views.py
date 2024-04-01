@@ -10,9 +10,8 @@ from rest_framework import status
 from rest_framework.exceptions import ValidationError
 
 # Create your views here.
-from rest_framework.exceptions import ValidationError
+
 class BookingView(APIView):
-    ...
 
     def post(self, request):
         serializer = FlightBookingSerializer(data=request.data)
