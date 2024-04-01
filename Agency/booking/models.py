@@ -25,7 +25,6 @@ class Booking(models.Model):
     trip_type = models.CharField(max_length=2, choices=TRIP_TYPE_CHOICES, default='OW')
     status = models.CharField(max_length=3, choices=STATUS_CHOICES, default='CMP')
     has_companions = models.BooleanField(default=False)
-    #passengers = models.ForeignKey(Passenger, related_name='bookings')
     def __str__(self):
         return f'Booking {self.booking_id} - User: {self.user.username} - Status: {self.get_status_display()}'
 
@@ -47,5 +46,23 @@ class Passenger(models.Model):
     phone_number=models.CharField(max_length=100,null=True,blank=True)
     def str(self):
              return f" {self.first_name} {self.last_name}"
+  
+    def add_baggage(self, size):
+        Baggage.objects.create(passenger=self, size=size)
+  
+    def has_small_baggage(self):
+        return self.baggages.filter(size='SM').exists()
 
+    def has_large_baggage(self):
+        return self.baggages.filter(size='LG').exists()
 
+class Baggage(models.Model):
+    SIZE_CHOICES = (
+        ('SM', 'Small'),
+        ('LG', 'Large'),
+    )
+    passenger = models.ForeignKey(Passenger, related_name='baggages', on_delete=models.CASCADE)
+    size = models.CharField(max_length=2, choices=SIZE_CHOICES)
+
+    def __str__(self):
+        return f"{self.passenger.first_name} {self.passenger.last_name}'s {self.get_size_display()} Baggage"
