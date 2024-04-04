@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.shortcuts import render,get_object_or_404 
 from rest_framework.decorators import api_view ,permission_classes
 from rest_framework.response import Response
-from .models import Flight,Airline,FlightSeatClass
+from .models import Flight,Airline,SeatType
 from rest_framework.pagination import PageNumberPagination
 from django.db.models import Avg
 from .serializer import FlightSerializer,SeatSerializer
@@ -126,5 +126,5 @@ class FlightListView(generics.ListAPIView):
 
 
 class SeatViewSet(viewsets.ModelViewSet):
-    queryset = FlightSeatClass.objects.all()
+    queryset = SeatType.objects.all()
     serializer_class = SeatSerializer

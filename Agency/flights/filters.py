@@ -1,5 +1,5 @@
 import django_filters
-from .models import Flight,FlightSeatClass
+from .models import Flight,SeatType
 from django_filters import FilterSet, CharFilter, DateTimeFilter, ModelChoiceFilter
 
 

@@ -3,13 +3,110 @@ from rest_framework import status
 from rest_framework import viewsets
 from rest_framework.views import APIView
 from .models import Booking,Passenger
+from .serializers import BookingSerializer,PassengerSerializer,PassengerSerializer
 from rest_framework.response import Response
-from .serializers import FlightBookingSerializer,PassengerSerializer,PassengerSerializer
-from rest_framework.response import Response
-from rest_framework import status
 from rest_framework.exceptions import ValidationError
-
+from rest_framework.decorators import api_view ,permission_classes
+from flights.models import Flight
 # Create your views here.
+
+@api_view(['POST'])
+def create_booking(request):
+    if request.method == 'POST':
+        booking_data = request.data.get('booking', {})
+        passenger_data = request.data.get('passenger', {})
+        
+        if not booking_data or not passenger_data:
+            return Response({'message': 'Booking and Passenger data are required'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        outbound_flight_id = booking_data.get('outbound_flight')
+        return_flight_id = booking_data.get('return_flight') 
+        
+
+        if outbound_flight_id == return_flight_id:
+            return Response({'message': 'Outbound and return flights cannot be the same'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            outbound_flight = Flight.objects.get(id=outbound_flight_id)
+            return_flight = Flight.objects.get(id=return_flight_id)
+        except Flight.DoesNotExist:
+            return Response({'message': 'One of the flights does not exist'}, status=status.HTTP_404_NOT_FOUND)
+        
+        passport_number = passenger_data.get('passport_number')
+        matching_passengers = Passenger.objects.filter(passport_number=passport_number)
+        
+        if matching_passengers.exists():
+            passenger = matching_passengers.first()
+        else:
+            passenger_serializer = PassengerSerializer(data=passenger_data)
+            if passenger_serializer.is_valid():
+                passenger = passenger_serializer.save()
+            else:
+                return Response(passenger_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+        for booking in Booking.objects.filter(Passenger=passenger.id):
+            if booking.outbound_flight_id == outbound_flight_id or (booking.return_flight_id and booking.return_flight_id == return_flight_id):
+               return Response({'message': 'Passenger already booked on one of these flights'}, status=status.HTTP_400_BAD_REQUEST)
+        booking_data['Passenger'] = passenger.id
+        booking_serializer = BookingSerializer(data=booking_data)
+        if booking_serializer.is_valid():
+            booking = booking_serializer.save()
+            return Response({'message': 'Booking created successfully', 'booking_id': booking.booking_id}, status=status.HTTP_201_CREATED)
+        return Response(booking_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+'''
+
+
+@api_view(['POST'])
+def Bookingview(request):
+    if request.method == 'POST':
+        # Retrieve flight data
+        outbound_flight_id = request.data.get('outbound_flight')
+        return_flight_id = request.data.get('return_flight')
+        
+        passport_number = request.data.get('passenger').get('passport_number')
+        existing_passenger = Passenger.objects.filter(passport_number=passport_number).first()
+        
+        if existing_passenger: 
+            booking_data = {
+                'user': request.user.id,  
+                'passengers': [existing_passenger.id],  # Change 'Passenger' to 'passengers'
+                'outbound_flight_id': outbound_flight_id,
+                'return_flight_id': return_flight_id,
+                'trip_type': request.data.get('trip_type')
+            }
+            
+            booking_serializer = BookingSerializer(data=booking_data)
+            if booking_serializer.is_valid():
+                booking = booking_serializer.save()
+                return Response({"message": "Booking created successfully", "booking": booking_serializer.data}, status=status.HTTP_201_CREATED)
+            else:
+                return Response(booking_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:  # If passenger doesn't exist, create passenger and booking
+            passenger_serializer = PassengerSerializer(data=request.data.get('passenger'))
+            if passenger_serializer.is_valid():
+                passenger = passenger_serializer.save()
+                
+                # Create Booking object
+                booking_data = {
+                    'user': request.user.id,  # Assuming user is authenticated
+                    'passengers': [passenger.id],  # Change 'Passenger' to 'passengers'
+                    'outbound_flight_id': outbound_flight_id,
+                    'return_flight_id': return_flight_id,
+                    'trip_type': request.data.get('trip_type')
+                }
+                
+                booking_serializer = BookingSerializer(data=booking_data)
+                if booking_serializer.is_valid():
+                    booking = booking_serializer.save()
+                    return Response({"message": "Booking created successfully", "booking": booking_serializer.data}, status=status.HTTP_201_CREATED)
+                else:
+                    passenger.delete()
+                    return Response(booking_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return Response(passenger_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+'''
+'''
 
 class BookingView(APIView):
 
@@ -69,7 +166,7 @@ class BookingView(APIView):
             if booking.passengers.filter(passport_number=passport_number).exists():
                 raise ValidationError(f"Passenger with passport number {passport_number} is already booked in this flight")
 
-
+'''
 '''
 class BookingView(APIView):
     def post(self, request):

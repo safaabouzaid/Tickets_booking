@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Flight,Review,FlightSeatClass
+from .models import Flight,Review,SeatType
 
 class FlightSerializer(serializers.ModelSerializer) :
     
@@ -29,7 +29,7 @@ class FlightSerializer(serializers.ModelSerializer) :
 
 class SeatSerializer(serializers.ModelSerializer):
     class Meta:
-        model = FlightSeatClass
+        model =SeatType
         fields = ['id', 'seat_number', 'is_reserved']
 
 

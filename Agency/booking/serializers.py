@@ -1,14 +1,29 @@
 from rest_framework import serializers
 from .models import Booking,Passenger,Baggage
+from flights.models import Flight#,FlightSeatClass
 
-class FlightBookingSerializer(serializers.ModelSerializer):
+
+class BaggageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Baggage
+        fields = '__all__'
+
+class PassengerSerializer(serializers.ModelSerializer):
+    baggages = BaggageSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Passenger
+        fields = '__all__'
+
+
+class BookingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Booking
-        fields = '__all__'
-        #sedra
+        fields =['user','Passenger','outbound_flight','return_flight','trip_type']
 
+
+    '''
     def validate(self, data):
-     print("Validating data...")
      outbound_flight = data.get('outbound_flight')
      return_flight = data.get('return_flight')
 
@@ -23,9 +38,11 @@ class FlightBookingSerializer(serializers.ModelSerializer):
      passport_numbers = [passenger.get('passport_number') for passenger in passengers_data]
      if len(passport_numbers) != len(set(passport_numbers)):
         raise serializers.ValidationError("Passport numbers must be unique within a booking")
+    # if not outbound_flight.flightseatclass_set.filter(id=seat_class_id).exists():
+     #       raise serializers.ValidationError("Selected seat class is not available for the outbound flight")
 
      return data
-
+    '''
 
     def create(self, validated_data):
         passengers_data = validated_data.pop('passengers', [])
@@ -35,21 +52,6 @@ class FlightBookingSerializer(serializers.ModelSerializer):
         return booking
 
 
-
-
-class BaggageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Baggage
-        fields = '__all__'
-
-
-class PassengerSerializer(serializers.ModelSerializer):
-    baggages = BaggageSerializer(many=True, read_only=True)
-
-    class Meta:
-        model = Passenger
-       # fields = '__all__'
-        fields=['first_name','last_name','date_of_birth','gender','passport_number','phone_number','baggages']
 
 
 
