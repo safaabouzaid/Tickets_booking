@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
 from rest_framework.decorators import api_view ,permission_classes
 from flights.models import Flight
-# Create your views here.
+# #Create your views here.
 
 @api_view(['POST'])
 def create_booking(request):
