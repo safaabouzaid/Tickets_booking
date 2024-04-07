@@ -44,12 +44,12 @@ class BookingSerializer(serializers.ModelSerializer):
      return data
     '''
 
-    def create(self, validated_data):
-        passengers_data = validated_data.pop('passengers', [])
-        booking = Booking.objects.create(**validated_data)
-        for passenger_data in passengers_data:
-            Passenger.objects.create(booking=booking, **passenger_data)
-        return booking
+   # def create(self, validated_data):
+    #    passengers_data = validated_data.pop('passengers', [])
+     #   booking = Booking.objects.create(**validated_data)
+    #    for passenger_data in passengers_data:
+     #       Passenger.objects.create(booking=booking, **passenger_data)
+      #s  return booking
 
 
 
