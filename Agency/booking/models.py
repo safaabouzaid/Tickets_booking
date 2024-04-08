@@ -1,8 +1,14 @@
 from django.db import models
 from operator import mod
 from account.models import User
+from django.dispatch import receiver
+from django.utils import timezone
+from django.utils.timezone import now
+from django.db.models.signals import post_save
 from datetime import datetime, timedelta 
 from account.models import User
+from datetime import timedelta
+
 from flights.models import Flight#,FlightSeatClass
 
 # Create your models here.
@@ -63,3 +69,11 @@ class Booking(models.Model):
     booking_date = models.DateTimeField(auto_now_add=True)
     trip_type = models.CharField(max_length=10, choices=TRIP_TYPE_CHOICES, default='OW')
     status = models.CharField(max_length=50, choices=STATUS_CHOICES, default='PPD')
+     
+
+
+
+
+
+
+

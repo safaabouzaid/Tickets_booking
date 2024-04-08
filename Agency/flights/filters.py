@@ -12,7 +12,7 @@ class FlightsFilter(django_filters.FilterSet):
     destination_city= django_filters.CharFilter(field_name='destination_city', label='destination_city', lookup_expr='exact', required=True)
     departure_country=django_filters.CharFilter(field_name='departure_country', label='departure_country', lookup_expr='exact', required=True)
     destination_country=django_filters.CharFilter(field_name='destination_country', label='destination_country', lookup_expr='exact', required=True)
-
+    
     class Meta:
        model =Flight
        fields = ['airportDeparture', 'airportArrival','departure_date','return_date','departure_city','destination_city','departure_country','destination_country']
