@@ -27,7 +27,7 @@ class Passenger(models.Model):
     date_of_birth = models.DateField()
     passport_number = models.CharField(max_length=100)
     def __str__(self):
-             return f" {self.first_name} {self.last_name}"
+             return f"{self.first_name} {self.last_name}"
 
 
     def add_baggage(self, baggage_type):
@@ -63,7 +63,7 @@ class Booking(models.Model):
 
     booking_id = models.BigAutoField(primary_key=True)
     user = models.ForeignKey(User, on_delete=models.SET_NULL,null=True)
-    Passenger= models.ForeignKey(Passenger, on_delete=models.SET_NULL,null=True)
+    passenger= models.ForeignKey(Passenger, on_delete=models.SET_NULL,null=True)
     outbound_flight = models.ForeignKey(Flight, related_name='outbound_bookings', on_delete=models.SET_NULL, null=True)
     return_flight = models.ForeignKey(Flight, related_name='return_bookings', on_delete=models.SET_NULL, null=True, blank=True)
     booking_date = models.DateTimeField(auto_now_add=True)

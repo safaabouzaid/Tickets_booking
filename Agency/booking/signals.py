@@ -1,3 +1,5 @@
+
+'''
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils import timezone
@@ -17,3 +19,6 @@ def send_booking_reminder(sender, instance, created, **kwargs):
         if timezone.now() >= reminder_datetime:
             notify.send(instance.user, 
                         verb=f"Your flight is coming up on {outbound_flight_date}. Don't forget to prepare!")
+
+
+'''
