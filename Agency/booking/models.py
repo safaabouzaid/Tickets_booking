@@ -72,36 +72,6 @@ class Booking(models.Model):
     
     
     
-    def update_flight_available_seats(self):
-        # احتساب عدد المقاعد المحجوزة على الرحلة
-        outbound_flight = self.outbound_flight
-        booked_seats = Booking.objects.filter(outbound_flight=outbound_flight).count()
-        
-        # حساب عدد المقاعد المتاحة بعد الحجز
-        available_economy_seats = max(0, outbound_flight.airplane.seattype.economy_capacity - booked_seats)
-        available_business_seats = max(0, outbound_flight.airplane.seattype.business_class_capacity - booked_seats)
-        available_first_class_seats = max(0, outbound_flight.airplane.seattype.first_class_capacity - booked_seats)
-        
-        # تحديث عدد المقاعد المتاحة على الرحلة
-        outbound_flight.available_economy_seats = available_economy_seats
-        outbound_flight.available_business_seats = available_business_seats
-        outbound_flight.available_first_class_seats = available_first_class_seats
-        outbound_flight.save()
-        
-        return {
-            'economy': available_economy_seats,
-            'business': available_business_seats,
-            'first_class': available_first_class_seats}
-
-'''
-    @receiver(post_save, sender=Booking)
-    def update_flight_seats(sender, instance, **kwargs):
-     if instance.outbound_flight:
-        instance.outbound_flight.update_available_seats()
-        instance.outbound_flight.save()
-
-
-'''
 class PushNotificationToken(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE) #we are not using a real User model in this article. You can use the User model specified in your application.
     fcm_token = models.CharField(max_length=200, unique=True)
