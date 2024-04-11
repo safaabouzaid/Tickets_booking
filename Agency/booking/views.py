@@ -2,13 +2,18 @@ from django.shortcuts import render
 from rest_framework import status
 from rest_framework import viewsets
 from rest_framework.views import APIView
-from .models import Booking,Passenger
+from .models import Booking,Passenger,PushNotificationToken
 from .serializers import BookingSerializer,PassengerSerializer,PassengerSerializer
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
 from rest_framework.decorators import api_view ,permission_classes
 from flights.models import Flight
-# #Create your views here.
+from rest_framework.permissions import IsAuthenticated
+
+from rest_framework.decorators import api_view
+import requests
+
+
 
 @api_view(['POST'])
 def create_booking(request):
@@ -54,8 +59,62 @@ def create_booking(request):
             return Response({'message': 'Booking created successfully', 'booking_id': booking.booking_id}, status=status.HTTP_201_CREATED)
         return Response(booking_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
-'''
 
+
+class UserBookingsAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user_bookings = Booking.objects.filter(user=request.user)
+        serializer = BookingSerializer(user_bookings, many=True)
+        return Response(serializer.data)
+
+
+@api_view(['POST'])
+def send_notification(request):
+    if request.method == 'POST':
+        booking_id = request.data.get('booking_id')
+        
+        # Check if there is an existing booking based on the booking id
+        try:
+            booking = Booking.objects.get(pk=booking_id)
+            
+            # Get the user id associated with the booking
+            user_id = booking.user_id
+            
+            # Get the trip name
+            trip_name = f"{booking.outbound_flight.departure_city} to {booking.outbound_flight.destination_city}"
+            
+            # Look for the FCM token associated with the user
+            try:
+                push_notification_token = PushNotificationToken.objects.get(owner_id=user_id)
+                fcm_token = push_notification_token.fcm_token
+                
+                # Send the notification using the available data
+                fcm_url = 'https://fcm.googleapis.com/fcm/send'
+                headers = {
+                    'Authorization': 'key=ac5e97f45f4432311f20ab40bfb303455548b52a',
+                    'Content-Type': 'application/json'
+                }
+                data = {
+                    'to': fcm_token,
+                    'notification': {
+                        'title': 'Trip Reminder',
+                        'body': f"Don't forget your trip {trip_name} tomorrow!"
+                    }
+                }
+                response = requests.post(fcm_url, headers=headers, json=data)
+
+                return Response({'message': 'Notification sent successfully'})
+                
+            except PushNotificationToken.DoesNotExist:
+                return Response({'error': 'No FCM token available for this user'})
+        
+        except Booking.DoesNotExist:
+            return Response({'error': 'No available booking with this id'})
+
+
+'''
 
 @api_view(['POST'])
 def Bookingview(request):

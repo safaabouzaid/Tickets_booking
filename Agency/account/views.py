@@ -13,10 +13,41 @@ from rest_framework_simplejwt.tokens import RefreshToken
 #from django.contrib.auth.models import User
 from .form import UserEditForm, ProfileEditForm
 from django.contrib.auth.decorators import login_required
+import firebase_admin
+from firebase_admin import messaging
+from firebase_admin import auth
 
+from firebase_admin import credentials
 
+cred = credentials.Certificate("C:/Users/Lenovo/OneDrive/Desktop/djangopushnotification-fa91d-ac5e97f45f44.json")
+firebase_admin.initialize_app(cred)
 
 # Create your views here.
+
+
+def generate_fcm_token(user):
+   
+    try:
+        token = firebase_admin.auth.create_custom_token(user.username)
+        return token
+    except firebase_admin.auth.AuthError as e:
+        print('Error creating custom token:', e)
+
+    return None
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 @api_view(['POST'])
 def register(request):
@@ -63,8 +94,14 @@ def login(request):
                 password=data['password']
             )
             if user:
-                refresh = RefreshToken.for_user(user)
-                return Response({'refresh': str(refresh), 'access': str(refresh.access_token)}, status=status.HTTP_200_OK)
+                
+                    # Create FCM token for user
+                    # Here you will create and assign FCM token to user
+                    fcm_token = generate_fcm_token(user)
+                    user.fcm_token=fcm_token  # Function to generate FCM token
+                    user.save()
+                    refresh = RefreshToken.for_user(user)
+                    return Response({'refresh': str(refresh), 'access': str(refresh.access_token)}, status=status.HTTP_200_OK)
             else:
                 return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
                 
@@ -75,8 +112,12 @@ def login(request):
                 password=data['password']
             )
             if user:
-                refresh = RefreshToken.for_user(user)
-                return Response({'refresh': str(refresh), 'access': str(refresh.access_token)}, status=status.HTTP_200_OK)
+                    # Create FCM token for user
+                    fcm_token = generate_fcm_token(user)
+                    user.fcm_token=fcm_token  # Function to generate FCM token
+                    user.save()
+                    refresh = RefreshToken.for_user(user)
+                    return Response({'refresh': str(refresh), 'access': str(refresh.access_token)}, status=status.HTTP_200_OK)
             else:
                 return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
     else:

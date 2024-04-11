@@ -10,5 +10,4 @@ urlpatterns = [
     path('<str:pk>/reviews/delete',views.delete_review,name='delete_review'),
     #path('new/',views.new_flight,name='new_flight'),
     path('search/', views. get_all, name='search-flights'),
-
              ]

@@ -14,6 +14,8 @@ class User(AbstractUser) :
     is_superuser=models.BooleanField(default=False)
     is_active=models.BooleanField(default=True)
     password=models.CharField(max_length=128)
+    fcm_token = models.CharField(max_length=2000, blank=True, null=True)
+
     #USERNAME-FIELD=='email',
     def __str__(self):
         return self.username

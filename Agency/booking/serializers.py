@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Booking,Passenger,Baggage
+from .models import Booking,Passenger,Baggage,PushNotificationToken
 from flights.models import Flight#,FlightSeatClass
 
 
@@ -20,6 +20,13 @@ class BookingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Booking
         fields =['user','Passenger','outbound_flight','return_flight','trip_type']
+
+
+
+class PushNotificationTokenSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PushNotificationToken
+        fields = '__all__'
 
 
     '''

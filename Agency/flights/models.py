@@ -1,6 +1,8 @@
 from django.db import models
 from datetime import datetime, timedelta
 from account.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 #from booking.models import Booking
 
 class Policy(models.Model):
@@ -31,7 +33,6 @@ class SeatType(models.Model):
     first_class_weight_limit = models.IntegerField(default=50, null=True, blank=False)
     carry_on_bag_weight_limit = models.IntegerField(default=8, null=True, blank=False)
     excess_weight_fee = models.DecimalField(max_digits=10, decimal_places=2, default=22)
-
     @property
     def economy_price_per_unit(self):
         price = 100  
@@ -46,6 +47,7 @@ class SeatType(models.Model):
     def first_class_price_per_unit(self):
         price = 100  
         return price * 3  
+    
 
     def __str__(self):
         return str(self.id)
@@ -56,7 +58,7 @@ class Airplane(models.Model):
     airplane_name = models.CharField(max_length=100)
     manufacturer = models.CharField(max_length=100)
     manufacturing_date = models.DateField()
-    seattype= models.ForeignKey(SeatType, on_delete=models.CASCADE)  
+    seats= models.ForeignKey(SeatType, on_delete=models.CASCADE)  
     airline=models.ForeignKey(Airline, on_delete=models.CASCADE,null=True)
 
     
@@ -78,22 +80,16 @@ class Flight(models.Model):
     destination_city = models.CharField(max_length=100,blank=False,null=False,default='')
     departure_country = models.CharField(max_length=100,blank=False,null=False,default='')
     destination_country = models.CharField(max_length=100,blank=False,null=False,default='')
-    price = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # حقل السعر
+    economy_remaining =models.IntegerField(default=20,null=True)
+    first_remaining = models.IntegerField(default=10,null=True)
+    business_remaining = models.IntegerField(default=10,null=True)
+   
 
     def __str__(self):
         return str(self.id)
-    '''
-    def save(self, *args, **kwargs):
-        # احسب سعر الرحلة استنادًا إلى سعر الدرجة في السيت تايب
-        if self.SeatType:
-            if self.SeatType.economy_capacity:
-                self.price = self.SeatType.economy_price_per_unit
-            elif self.SeatType.business_class_capacity:
-                self.price = self.SeatType.business_class_price_per_unit
-            elif self.SeatType.first_class_capacity:
-                self.price = self.SeatType.first_class_price_per_unit
-        super().save(*args, **kwargs)
-    '''
+
+    
+
 
 class Airport(models.Model):
     airport_id = models.AutoField(primary_key=True)
