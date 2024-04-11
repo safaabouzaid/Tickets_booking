@@ -4,7 +4,7 @@ from account.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 #from booking.models import Booking
-
+#######
 class Policy(models.Model):
     refundable = models.BooleanField(default=False)
     exchangeable = models.BooleanField(default=False)
@@ -87,8 +87,6 @@ class Flight(models.Model):
 
     def __str__(self):
         return str(self.id)
-
-    
 
 
 class Airport(models.Model):
