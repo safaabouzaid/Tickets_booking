@@ -29,7 +29,7 @@ from django.utils import timezone
 from .models import Booking
 from flights.models import Flight
 #from . import notification  # استيراد وظيفة الإشعار
-
+'''
 @receiver(post_save, sender=Booking)
 def send_reminder_notification(sender, instance, created, **kwargs):
     if created:  # التأكد من أن هذا الحجز هو حجز جديد
@@ -41,3 +41,4 @@ def send_reminder_notification(sender, instance, created, **kwargs):
             fcm_token = instance.user.pushnotificationtoken.fcm_token
             trip_name = f"{instance.outbound_flight.departure_city} إلى {instance.outbound_flight.destination_city}"
             notification.send_push_notification(fcm_token, trip_name)
+'''

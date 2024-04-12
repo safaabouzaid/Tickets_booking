@@ -70,12 +70,12 @@ class Booking(models.Model):
     trip_type = models.CharField(max_length=10, choices=TRIP_TYPE_CHOICES, default='OW')
     status = models.CharField(max_length=50, choices=STATUS_CHOICES, default='PPD')
     
-    
+'''  
     
 class PushNotificationToken(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE) #we are not using a real User model in this article. You can use the User model specified in your application.
     fcm_token = models.CharField(max_length=200, unique=True)
 
 
-
+'''
 

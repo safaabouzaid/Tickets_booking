@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Booking,Passenger,Baggage,PushNotificationToken
+from .models import Booking,Passenger,Baggage#,PushNotificationToken
 from flights.models import Flight#,FlightSeatClass
 
 
@@ -22,14 +22,13 @@ class BookingSerializer(serializers.ModelSerializer):
         fields =['user','Passenger','outbound_flight','return_flight','trip_type']
 
 
-
+'''
 class PushNotificationTokenSerializer(serializers.ModelSerializer):
     class Meta:
         model = PushNotificationToken
         fields = '__all__'
-
-
-    '''
+'''
+'''
     def validate(self, data):
      outbound_flight = data.get('outbound_flight')
      return_flight = data.get('return_flight')
@@ -49,7 +48,7 @@ class PushNotificationTokenSerializer(serializers.ModelSerializer):
      #       raise serializers.ValidationError("Selected seat class is not available for the outbound flight")
 
      return data
-    '''
+'''
 
    # def create(self, validated_data):
     #    passengers_data = validated_data.pop('passengers', [])

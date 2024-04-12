@@ -18,10 +18,10 @@ from firebase_admin import messaging
 from firebase_admin import auth
 
 from firebase_admin import credentials
-
+'''
 cred = credentials.Certificate("C:/Users/Lenovo/OneDrive/Desktop/djangopushnotification-fa91d-ac5e97f45f44.json")
 firebase_admin.initialize_app(cred)
-
+'''
 # Create your views here.
 
 

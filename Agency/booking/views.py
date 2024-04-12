@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework import status
 from rest_framework import viewsets
 from rest_framework.views import APIView
-from .models import Booking,Passenger,PushNotificationToken
+from .models import Booking,Passenger#,PushNotificationToken
 from .serializers import BookingSerializer,PassengerSerializer,PassengerSerializer
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
