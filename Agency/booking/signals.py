@@ -28,7 +28,7 @@ from django.dispatch import receiver
 from django.utils import timezone
 from .models import Booking
 from flights.models import Flight
-from . import notification  # استيراد وظيفة الإشعار
+#from . import notification  # استيراد وظيفة الإشعار
 
 @receiver(post_save, sender=Booking)
 def send_reminder_notification(sender, instance, created, **kwargs):
