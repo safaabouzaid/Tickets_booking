@@ -8,6 +8,6 @@ urlpatterns = [
 #path('bookings/', views.Bookingview, name='create_booking'),
 path('bookings/', views.create_booking, name='create_booking'),
 path('user-bookings/', UserBookingsAPIView.as_view(), name='user-bookings'),
-path('send_notification/', views.send_notification, name='send_notification'),
+#path('send_notification/', views.send_notification, name='send_notification'),
 
 ]

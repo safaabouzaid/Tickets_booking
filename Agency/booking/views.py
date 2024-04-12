@@ -68,7 +68,7 @@ class UserBookingsAPIView(APIView):
         user_bookings = Booking.objects.filter(user=request.user)
         serializer = BookingSerializer(user_bookings, many=True)
         return Response(serializer.data)
-
+'''
 
 @api_view(['POST'])
 def send_notification(request):
@@ -113,7 +113,7 @@ def send_notification(request):
         except Booking.DoesNotExist:
             return Response({'error': 'No available booking with this id'})
 
-
+'''
 '''
 
 @api_view(['POST'])
