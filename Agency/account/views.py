@@ -24,7 +24,7 @@ firebase_admin.initialize_app(cred)
 '''
 # Create your views here.
 
-
+'''
 def generate_fcm_token(user):
    
     try:
@@ -35,7 +35,7 @@ def generate_fcm_token(user):
 
     return None
 
-
+'''
 
 
 
