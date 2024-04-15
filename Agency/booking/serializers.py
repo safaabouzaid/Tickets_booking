@@ -1,15 +1,10 @@
 from rest_framework import serializers
-from .models import Booking,Passenger,Baggage#,PushNotificationToken
-from flights.models import Flight#,FlightSeatClass
+from .models import Booking,Passenger,Payment#,PushNotificationToken
+from flights.models import Flight,Airline#,FlightSeatClass
 
 
-class BaggageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Baggage
-        fields = '__all__'
 
 class PassengerSerializer(serializers.ModelSerializer):
-    baggages = BaggageSerializer(many=True, read_only=True)
 
     class Meta:
         model = Passenger
@@ -19,7 +14,58 @@ class PassengerSerializer(serializers.ModelSerializer):
 class BookingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Booking
-        fields =['user','Passenger','outbound_flight','return_flight','trip_type']
+        fields =['user','Passenger','outbound_flight','return_flight','trip_type','passenger_class']
+
+
+class PaymentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Payment
+        fields = '__all__'  
+        
+        
+class FlightSerializer1(serializers.ModelSerializer):
+    class Meta:
+        model = Flight
+        fields = ['airportDeparture','airportArrival']
+
+class BookingSerializer1(serializers.ModelSerializer):
+    outbound_flight = FlightSerializer1()
+
+    class Meta:
+        model = Booking
+        fields = ['user', 'Passenger', 'outbound_flight', 'return_flight', 'trip_type', 'passenger_class','total_cost','booking_date']        
+        
+class AirlineSerializer2(serializers.ModelSerializer):
+    class Meta:
+        model = Airline
+        fields = ['airline_name']
+
+class FlightSerializer2(serializers.ModelSerializer):
+    airline = AirlineSerializer2()  # تضمين معلومات الشركة الجوية
+
+    class Meta:
+        model = Flight
+        fields = ['airportDeparture', 'airportArrival','airline']  # تضمين معلومات الشركة الجوية
+
+class BookingSerializer2(serializers.ModelSerializer):
+    outbound_flight = FlightSerializer2()
+
+    class Meta:
+        model = Booking
+        fields = ['user', 'Passenger', 'outbound_flight', 'return_flight', 'trip_type', 'passenger_class', 'total_cost', 'booking_date']
+class FlightSerializer3(serializers.ModelSerializer):
+    airline_name = serializers.CharField(source='airplane.airline.airline_name')
+
+    class Meta:
+        model = Flight
+        fields = ['airportDeparture', 'airportArrival', 'airline_name']
+
+class BookingSerializer3(serializers.ModelSerializer):
+    outbound_flight = FlightSerializer3()
+
+    class Meta:
+        model = Booking
+        fields = ['user', 'Passenger', 'outbound_flight', 'return_flight', 'trip_type', 'passenger_class', 'total_cost', 'booking_date','status']
 
 
 '''

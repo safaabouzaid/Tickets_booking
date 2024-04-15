@@ -30,25 +30,6 @@ class Passenger(models.Model):
              return f"{self.first_name} {self.last_name}"
 
 
-    def add_baggage(self, baggage_type):
-        Baggage.objects.create(passenger=self, baggage_type=baggage_type)
-
-    def has_baggage(self, baggage_type):
-        return self.baggages.filter(baggage_type=baggage_type).exists()
-
-class Baggage(models.Model):
-    BAGGAGE_CHOICES = (
-        ('HI', 'Hand Item'),
-        ('PI', 'Personal Item'),
-        ('CB', 'Checked Baggage'),
-    )
-    
-    passenger = models.ForeignKey(Passenger, related_name='baggages', on_delete=models.CASCADE)
-    baggage_type = models.CharField(max_length=2, choices=BAGGAGE_CHOICES,default='HI')  # اختيار نوع الحقيبة
-
-    def __str__(self):
-        return f"{self.passenger.first_name} {self.passenger.last_name}'s {self.get_baggage_type_display()}"
-
 class Booking(models.Model):
     STATUS_CHOICES = (
         ('CNL', 'Canceled'),
@@ -61,15 +42,74 @@ class Booking(models.Model):
         ('RT', 'Round Trip'),
     )
 
-    booking_id = models.BigAutoField(primary_key=True)
+    CLASS_CHOICES = (
+        ('Economy', 'Economy'),
+        ('Business', 'Business'),
+        ('First', 'First'),
+    ) 
+   
+   
     user = models.ForeignKey(User, on_delete=models.SET_NULL,null=True)
     Passenger= models.ForeignKey(Passenger, on_delete=models.SET_NULL,null=True)
     outbound_flight = models.ForeignKey(Flight, related_name='outbound_bookings', on_delete=models.SET_NULL, null=True)
     return_flight = models.ForeignKey(Flight, related_name='return_bookings', on_delete=models.SET_NULL, null=True, blank=True)
     booking_date = models.DateTimeField(auto_now_add=True)
+    passenger_class = models.CharField(max_length=10, choices=CLASS_CHOICES,null=True)
     trip_type = models.CharField(max_length=10, choices=TRIP_TYPE_CHOICES, default='OW')
     status = models.CharField(max_length=50, choices=STATUS_CHOICES, default='PPD')
-    
+    total_cost=models.DecimalField(max_digits=15, decimal_places=5,null=True)
+    def save(self, *args, **kwargs):
+        if self.outbound_flight:
+            if self.trip_type == 'OW':
+                if self.passenger_class == 'Economy' and self.outbound_flight.economy_remaining == 0:
+                    raise ValidationError("No economy seats remaining for outbound flight.")
+                elif self.passenger_class == 'First' and self.outbound_flight.first_remaining == 0:
+                    raise ValidationError("No first class seats remaining for outbound flight.")
+                elif self.passenger_class == 'Business' and self.outbound_flight.business_remaining == 0:
+                    raise ValidationError("No business class seats remaining for outbound flight.")
+            elif self.trip_type == 'RT' and self.return_flight:
+                if self.passenger_class == 'Economy' and (self.outbound_flight.economy_remaining == 0 or self.return_flight.economy_remaining == 0):
+                    raise ValidationError("No economy seats remaining for outbound or return flight.")
+                elif self.passenger_class == 'First' and (self.outbound_flight.first_remaining == 0 or self.return_flight.first_remaining == 0):
+                    raise ValidationError("No first class seats remaining for outbound or return flight.")
+                elif self.passenger_class == 'Business' and (self.outbound_flight.business_remaining == 0 or self.return_flight.business_remaining == 0):
+                    raise ValidationError("No business class seats remaining for outbound or return flight.")
+
+        # Calculate total cost based on seat type and class
+        price = self.outbound_flight.price_flight
+        if self.passenger_class == 'First':
+            price *= Decimal('3')
+        elif self.passenger_class == 'Business':
+            price *= Decimal('2')
+        self.total_cost = price
+
+        super().save(*args, **kwargs)
+        if self.outbound_flight:
+            if self.trip_type == 'OW':
+                if self.passenger_class == 'Economy':
+                    self.outbound_flight.economy_remaining -= 1
+                elif self.passenger_class == 'First':
+                    self.outbound_flight.first_remaining -= 1
+                elif self.passenger_class == 'Business':
+                    self.outbound_flight.business_remaining -= 1
+            elif self.trip_type == 'RT' and self.return_flight:
+                if self.passenger_class == 'Economy':
+                    self.outbound_flight.economy_remaining -= 1
+                    self.return_flight.economy_remaining -= 1
+                elif self.passenger_class == 'First':
+                    self.outbound_flight.first_remaining -= 1
+                    self.return_flight.first_remaining -= 1
+                elif self.passenger_class == 'Business':
+                    self.outbound_flight.business_remaining -= 1
+                    self.return_flight.business_remaining -= 1
+
+            self.outbound_flight.save()
+            if self.return_flight:
+                self.return_flight.save()
+                 
+
+
+
 '''  
     
 class PushNotificationToken(models.Model):
@@ -79,3 +119,12 @@ class PushNotificationToken(models.Model):
 
 '''
 
+
+class Payment(models.Model):
+    amount = models.DecimalField(max_digits=15, decimal_places=5,null=True)
+    payment_date = models.DateTimeField(auto_now_add=True,null=True)
+    booking = models.OneToOneField(Booking, on_delete=models.CASCADE,null=True)
+    user=models.ForeignKey(User,on_delete=models.CASCADE,null=True)
+
+    def __str__(self):
+        return f"Payment ID: {self.id}"

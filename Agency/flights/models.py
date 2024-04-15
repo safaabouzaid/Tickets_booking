@@ -84,7 +84,7 @@ class Flight(models.Model):
     economy_remaining =models.IntegerField(default=20,null=True)
     first_remaining = models.IntegerField(default=10,null=True)
     business_remaining = models.IntegerField(default=10,null=True)
-    price = models.DecimalField(default=10.1, max_digits=10, decimal_places=2)
+    price_flight= models.DecimalField(default=10.1, max_digits=10, decimal_places=2)
    
 
     def __str__(self):

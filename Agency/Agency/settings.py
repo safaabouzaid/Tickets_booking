@@ -89,7 +89,7 @@ WSGI_APPLICATION = 'Agency.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
+        'NAME': 'VIAWISE',
         'USER':'postgres',
         'PASSWORD':'1234',
         'HOST':'localhost',

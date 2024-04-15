@@ -2,7 +2,6 @@ from rest_framework.authtoken.models import Token
 from django.shortcuts import render
 from django.shortcuts import render
 from rest_framework.authtoken.views import ObtainAuthToken
-
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.decorators import api_view ,permission_classes
 from rest_framework.response import Response
@@ -101,9 +100,7 @@ def login(request):
                 
                     # Create FCM token for user
                     # Here you will create and assign FCM token to user
-                    fcm_token = generate_fcm_token(user)
-                    user.fcm_token=fcm_token  # Function to generate FCM token
-                    user.save()
+                   
                     refresh = RefreshToken.for_user(user)
                     return Response({'refresh': str(refresh), 'access': str(refresh.access_token)}, status=status.HTTP_200_OK)
             else:
@@ -117,9 +114,7 @@ def login(request):
             )
             if user:
                     # Create FCM token for user
-                    fcm_token = generate_fcm_token(user)
-                    user.fcm_token=fcm_token  # Function to generate FCM token
-                    user.save()
+                    
                     refresh = RefreshToken.for_user(user)
                     return Response({'refresh': str(refresh), 'access': str(refresh.access_token)}, status=status.HTTP_200_OK)
             else:

@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework import status
 from rest_framework import viewsets
 from rest_framework.views import APIView
-from .models import Booking,Passenger#,PushNotificationToken
+from .models import Booking,Passenger,Payment#,PushNotificationToken
 from .serializers import BookingSerializer,PassengerSerializer,PassengerSerializer
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
@@ -12,7 +12,6 @@ from rest_framework.permissions import IsAuthenticated
 
 from rest_framework.decorators import api_view
 import requests
-
 
 
 @api_view(['POST'])
@@ -56,11 +55,41 @@ def create_booking(request):
         booking_serializer = BookingSerializer(data=booking_data)
         if booking_serializer.is_valid():
             booking = booking_serializer.save()
-            return Response({'message': 'Booking created successfully', 'booking_id': booking.booking_id}, status=status.HTTP_201_CREATED)
+            return Response({'message': 'Booking created successfully', 'booking_id': booking.id }, status=status.HTTP_201_CREATED)
         return Response(booking_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
         
+@api_view(['POST'])
+def make_payment(request):
+    booking_id = request.data.get('booking_id')
 
+    try:
+        booking = Booking.objects.get(id=booking_id)
+    except Booking.DoesNotExist:
+        return Response({"message": "Booking does not exist."}, status=status.HTTP_404_NOT_FOUND)
 
+    user = booking.user
+    total_cost = booking.total_cost
+
+    if user.balance is not None and total_cost is not None:
+        if user.balance >= total_cost:
+            payment = Payment.objects.create(
+                amount=total_cost,
+                booking=booking,
+                user=user
+            )
+            user.balance -= total_cost
+            user.save()
+            
+            booking.status = 'CMP'
+            booking.save()
+
+            return Response({"message": "Payment created successfully."}, status=status.HTTP_201_CREATED)
+        else:
+            return Response({"message": "Insufficient balance."}, status=status.HTTP_400_BAD_REQUEST)
+    else:
+        return Response({"message": "Invalid balance or total cost."}, status=status.HTTP_400_BAD_REQUEST)
+        
 class UserBookingsAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
