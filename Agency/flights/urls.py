@@ -1,6 +1,6 @@
 from django.urls import path,include
 from . import views
-from .views import FlightListView
+from .views import FlightListView,SeedDatabaseAPIView
 
 
 urlpatterns = [
@@ -10,4 +10,6 @@ urlpatterns = [
     path('<str:pk>/reviews/delete',views.delete_review,name='delete_review'),
     #path('new/',views.new_flight,name='new_flight'),
     path('search/', views. get_all, name='search-flights'),
-             ]
+    path('seed-database/', SeedDatabaseAPIView.as_view(), name='seed-database'),
+
+    ]

@@ -13,6 +13,10 @@ from .filters import FlightsFilter
 from rest_framework import generics
 from rest_framework import viewsets
 
+from rest_framework.views import APIView
+from rest_framework import status
+from django.core.management import call_command
+
 # Create your views here.
 @api_view(['GET'])
 def get_all_flights(request) :
@@ -37,6 +41,17 @@ def get_all(request) :
    return Response({"flights":serializer.data})
 
 
+
+
+class SeedDatabaseAPIView(APIView):
+    def get(self, request, format=None):
+        try:
+            # استدعاء الأمر لتشغيل عملية ملء قاعدة البيانات
+            call_command('seed')
+
+            return Response({"message": "Database seeding successful."}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 '''
 @api_view(['POST'])
