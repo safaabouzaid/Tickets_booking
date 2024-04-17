@@ -13,6 +13,7 @@ from datetime import timedelta
 from pathlib import Path
 import dj_database_url
 import os
+os.chdir(r'C:\Users\admin\Desktop\deploy\Tickets_booking\Agency')
 
 
 
