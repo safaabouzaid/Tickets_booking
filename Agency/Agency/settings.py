@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 from datetime import timedelta
 from pathlib import Path
-import dj_database_url 
+import dj_database_url
 import os
 
 
@@ -48,6 +48,7 @@ INSTALLED_APPS = [#safa
     'flights',
     'booking',
     'django_filters',
+    'django_seed',
     
     
     
@@ -92,16 +93,16 @@ WSGI_APPLICATION = 'Agency.wsgi.application'
 
 #DATABASES = {
    # 'default': {
-   #     'ENGINE': 'django.db.backends.postgresql',
-   #     'NAME': 'viawise1',
-   #     'USER':'postgres',
-  #      'PASSWORD':'123456',
- #       'HOST':'localhost', ##هون 
- #       'POST':'5432'
+       # 'ENGINE': 'django.db.backends.postgresql',
+      #  'NAME': 'viawise1',
+     #   'USER':'postgres',
+    #    'PASSWORD':'123456',
+   #     'HOST':'localhost', ##هون 
+  #      'POST':'5432'
  #   }
 #} 
 DATABASES  = {
-    'default':dj_database_url.parse(os.environ.get("DATABASE_URl")) #;
+    "default": dj_database_url.parse(os.environ.get("DATABASE_URl")) 
               
               }
 

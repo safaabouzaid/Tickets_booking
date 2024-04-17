@@ -119,11 +119,6 @@ class RefundedPayment(models.Model):
 
 
 
-class Payment(models.Model):
-    #booking = models.ForeignKey(Booking, on_delete=models.CASCADE)
-    amount = models.DecimalField(max_digits=30, decimal_places=10 )
-
-
 class Review(models.Model):
     flight = models.ForeignKey(Flight, null=True, on_delete=models.CASCADE, related_name='reviews')
     user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
