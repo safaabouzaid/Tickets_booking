@@ -105,7 +105,7 @@ class PushNotificationTokenSerializer(serializers.ModelSerializer):
       
       
       #git 
-      #sedra
+      #sedra #qq
 
 
 
