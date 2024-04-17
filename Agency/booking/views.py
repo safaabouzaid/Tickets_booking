@@ -11,7 +11,7 @@ from flights.models import Flight
 from rest_framework.permissions import IsAuthenticated
 
 from rest_framework.decorators import api_view
-import requests
+#import requests
 
 
 @api_view(['POST'])
