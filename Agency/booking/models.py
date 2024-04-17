@@ -8,7 +8,7 @@ from django.db.models.signals import post_save
 from datetime import datetime, timedelta 
 from account.models import User
 from datetime import timedelta
-
+from decimal import Decimal
 from flights.models import Flight#,FlightSeatClass
 
 # Create your models here.
