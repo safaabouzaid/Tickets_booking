@@ -92,16 +92,7 @@ WSGI_APPLICATION = 'Agency.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-#DATABASES = {
-   # 'default': {
-       # 'ENGINE': 'django.db.backends.postgresql',
-      #  'NAME': 'viawise1',
-     #   'USER':'postgres',
-    #    'PASSWORD':'123456',
-   #     'HOST':'localhost', ##هون 
-  #      'POST':'5432'
- #   }
-#} 
+
 DATABASES  = {
     "default": dj_database_url.parse(os.environ.get("DATABASE_URl")) 
               
