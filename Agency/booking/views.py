@@ -12,8 +12,6 @@ from rest_framework.permissions import IsAuthenticated
 
 from rest_framework.decorators import api_view
 import requests
-
-
 @api_view(['POST'])
 def create_booking(request):
     if request.method == 'POST':

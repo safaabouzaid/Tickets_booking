@@ -11,10 +11,6 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 from datetime import timedelta
 from pathlib import Path
-import dj_database_url 
-import os
-
-
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -29,7 +25,7 @@ SECRET_KEY = 'django-insecure-9^b0d(#@7kgnanuyhbfp0+y1kz3cnx!f72a9wa%x-^-j$_02x2
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -97,16 +93,10 @@ DATABASES = {
         'NAME': 'VIAWISE',
         'USER':'postgres',
         'PASSWORD':'1234',
-        'HOST':'localhost', ##هون 
+        'HOST':'localhost',
         'POST':'5432'
     }
-} 
-
-#DATABASES  = {
- #   'default':dj_database_url.parse(os.environ.get("DATABASE_URl"))
-  #            
-   #           }
-
+}
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 
 REST_FRAMEWORK = {
