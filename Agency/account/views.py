@@ -15,11 +15,12 @@ from rest_framework_simplejwt.tokens import RefreshToken
 #from django.contrib.auth.models import User
 from .form import UserEditForm, ProfileEditForm
 from django.contrib.auth.decorators import login_required
-import firebase_admin
-from firebase_admin import messaging
-from firebase_admin import auth
+from django.contrib.auth import logout
+#import firebase_admin
+#from firebase_admin import messaging
+#from firebase_admin import auth
 
-from firebase_admin import credentials
+#from firebase_admin import credentials
 '''
 cred = credentials.Certificate("C:/Users/Lenovo/OneDrive/Desktop/djangopushnotification-fa91d-ac5e97f45f44.json")
 firebase_admin.initialize_app(cred)
@@ -166,3 +167,5 @@ def user_profile(request):
 
     else:
         return Response("Method not allowed", status=405)
+    
+    

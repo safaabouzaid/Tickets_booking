@@ -22,6 +22,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.tokens import AccessToken
 from django.conf.urls.static import static
 from django.conf import settings
+#from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 urlpatterns = [
     
     path('flight/',include("flights.urls")),
@@ -31,7 +32,9 @@ urlpatterns = [
     path('api/token/',TokenObtainPairView.as_view()),
     path('admin/', admin.site.urls),
     #path('', HomePageView.as_view(), name='home'),
+    
 ]
+#urlpatterns += staticfiles_urlpatterns()
 if settings.DEBUG:
     urlpatterns+=static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
     

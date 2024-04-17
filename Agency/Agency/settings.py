@@ -11,6 +11,10 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 from datetime import timedelta
 from pathlib import Path
+import dj_database_url 
+import os
+
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -87,16 +91,21 @@ WSGI_APPLICATION = 'Agency.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'VIAWISE',
-        'USER':'postgres',
-        'PASSWORD':'1234',
-        'HOST':'localhost',
-        'POST':'5432'
-    }
-}
+#DATABASES = {
+   # 'default': {
+   #     'ENGINE': 'django.db.backends.postgresql',
+   #     'NAME': 'viawise1',
+   #     'USER':'postgres',
+  #      'PASSWORD':'123456',
+ #       'HOST':'localhost', ##هون 
+ #       'POST':'5432'
+ #   }
+#} 
+DATABASES  = {
+    'default':dj_database_url.parse(os.environ.get("DATABASE_URl"))
+              
+              }
+
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 
 REST_FRAMEWORK = {
