@@ -102,7 +102,7 @@ WSGI_APPLICATION = 'Agency.wsgi.application'
  #   }
 #} 
 DATABASES  = {
-    "default": dj_database_url.parse(os.environ.get("DATABASE_URl")) 
+    "default": dj_database_url.parse(os.environ.get("DATABASE_URL")) 
               
               }
 

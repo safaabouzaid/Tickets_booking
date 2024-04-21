@@ -21,4 +21,4 @@ class FlightsFilter(django_filters.FilterSet):
         if self.data.get('airportDeparture') or self.data.get('departure_city') or self.data.get('departure_country')  and self.data.get('airportArrival') or self.data.get('destination_city') or self.data.get('destination_country')  and self.data.get('departure_date')  and self.data.get('return_date') :
             return super().filter_queryset(queryset)
         else:
-            return queryset.none()
+            return queryset.none() #sed
